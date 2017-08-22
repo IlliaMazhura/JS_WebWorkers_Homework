@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+    <div>
+        <h1>Simple Numbers</h1>
+       from : <input type="number" id="number1" value="0">
+       to   : <input type="number" id="number2" value="1">
+        <input  type="button" value="run" onclick="startWorker();"/>
+        <br />
+        <div id="resultP" style="height:200px;word-wrap:break-word;background-color:gainsboro;overflow-y: scroll;">result:<br /></div>
+    </div>
+    <h1>Fibonacci number</h1>
+    <div>
+         Your number  : <input type="number" id="number" value="1">
+        <input type="button" value="run" onclick="startWorker2();" />
+        <br />
+        <div id="resultF" style="height:200px;word-wrap:break-word;background-color:gainsboro;overflow-y: scroll;">result:<br /></div>
+    </div>
+    <script>
+        
+        
+        
+
+        function startWorker() {
+            if (typeof (Worker) !== "undefined") {
+                if (typeof (w) == "undefined") {
+                    w = new Worker("Script.js");
+                }
+                var first = document.getElementById('number1');
+                var second = document.getElementById('number2');
+                w.postMessage([first.value, second.value]);
+
+                w.addEventListener("message", Listener);
+
+            } else {
+                document.getElementById("resultP").innerHTML = "Sorry! No Web Worker support.";
+            }
+        };
+
+        function Listener(event) {
+            document.getElementById("resultP").innerHTML +=  "  "+event.data;
+        };
+
+        function startWorker2() {
+            document.getElementById("resultF").innerHTML = "result:<br />";
+            if (typeof (Worker) !== "undefined") {
+                if (typeof (ww) == "undefined") {
+                    ww = new Worker("ScriptFibonacci.js");
+                }
+                var first = document.getElementById('number');
+                
+                ww.postMessage(first.value);
+
+                ww.addEventListener("message", Listener2);
+
+            } else {
+                document.getElementById("resultF").innerHTML = "Sorry! No Web Worker support.";
+            }
+        };
+
+        function Listener2(event) {
+            document.getElementById("resultF").innerHTML += "  " + event.data;
+        };
+    </script>
+</body>
+</html>
